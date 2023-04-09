@@ -1,0 +1,24 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+<div class="container my-3">
+    <h2 class="border-bottom py-2">{{ req.speech }}, {{ req.bpm }}, {{ req.beats }}</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">'{{req.speech}}' 발언 세트로 {{req.bpm}}BPM 음악 {{req.beats}}박자짜리를 만들라는 요청입니다.</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2">
+                    {{ req.timestamp }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <h5 class="border-bottom my-3 py-2">결과물</h5>
+    <div class="card my-3">
+        <div class="card-body">
+            <audio controls>
+                <source src="/gim/media/{{req.fname}}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </div>
+</div>
