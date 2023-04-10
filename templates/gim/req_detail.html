@@ -15,10 +15,14 @@
     <h5 class="border-bottom my-3 py-2">결과물</h5>
     <div class="card my-3">
         <div class="card-body">
+            {% if req.fname|default:""|slice:"-3:" == "wav" %}
             <audio controls>
                 <source src="/gim/media/{{req.fname}}" type="audio/wav">
                 Your browser does not support the audio element.
             </audio>
+            {% else %}
+            <p class="card-text">{{ req.fname }}</p>
+            {% endif %}
         </div>
     </div>
 </div>

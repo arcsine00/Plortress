@@ -56,8 +56,8 @@ def GIM(speech, bpm, beats):
                 newm = random.choices([ref, (ref+3)+(ref+3 not in omni), ref+7],k=b)
                 for i in remloc: newm[i]=0
                 melody += newm*(rep//b)+newm[:rep%b]
-        else: err = '박자수 값이 너무 크거나 0이에요.'
-    else: err = '박자수 값이 잘못된 형태라서 연산할 수 없어요.'
+        else: err = '박자수 값이 너무 크거나 0이에요.'; return fname, err
+    else: err = '박자수 값이 잘못된 형태라서 연산할 수 없어요.'; return fname, err
 
     if len(melody)==rep*int(beats):
         if bpm.isdigit():
@@ -70,9 +70,9 @@ def GIM(speech, bpm, beats):
                     print(f'fin 길이: {len(fin)}')
                     fin = np.append(fin,temp)
                 fin = np.int16(fin / np.max(np.abs(fin)) * 32767)
-            else: err = 'BPM 값은 60 이상 240 이하만 가능해요.'
-        else: err = 'BPM 값이 잘못된 형태라서 연산할 수 없어요.'
-    else: err = '연산 중 문제가 생겼어요.'
+            else: err = 'BPM 값은 60 이상 240 이하만 가능해요.'; return fname, err
+        else: err = 'BPM 값이 잘못된 형태라서 연산할 수 없어요.'; return fname, err
+    else: err = '연산 중 문제가 생겼어요.'; return fname, err
 
     lyr = np.array([])
     if speech in ['열병식']:
@@ -88,12 +88,12 @@ def GIM(speech, bpm, beats):
                         print(f'lyr 길이: {len(lyr)}')
                         if len(r)-(fpb//2)*a<fpb//2: lyr = np.concatenate((lyr,r[fpb//2*a:],[0]*(fpb//2*(a+1)-len(r)))); ended=True
                         else: lyr = np.append(lyr, r[fpb//2*a:fpb//2*(a+1)])
-                    else: err = '적절한 파일을 발견하는 것에 실패했어요.'; break
+                    else: err = '적절한 파일을 발견하는 것에 실패했어요.'; return fname, err
                     a += 1
                 lyr = np.int16(lyr / np.max(np.abs(lyr)) * 32767)
-            else: err = '발언집에서 파일을 발견하는 것에 실패했어요.'
-        else: err = f"'{speech}' 발언집에 내용이 없어요. 개발자를 호출해 주세요."
-    else: err = f"'{speech}'(이)라는 이름의 발언집은 아직 등록되지 않았거나 존재하지 않아요."
+            else: err = '발언집에서 파일을 발견하는 것에 실패했어요.'; return fname, err
+        else: err = f"'{speech}' 발언집에 내용이 없어요. 개발자를 호출해 주세요."; return fname, err
+    else: err = f"'{speech}'(이)라는 이름의 발언집은 아직 등록되지 않았거나 존재하지 않아요."; return fname, err
 
     percs = np.zeros((fpb//2)*len(melody))
     path = f'{d.GEN_PATH}/audio/percs'
@@ -114,12 +114,12 @@ def GIM(speech, bpm, beats):
                         print(len(perc), len(melody))
                     perc = np.int16(perc / np.max(np.abs(perc)) * 32767)
                     percs += perc
-                else: err = '적절한 파일을 발견하는 것에 실패했어요.'; break
+                else: err = '적절한 파일을 발견하는 것에 실패했어요.'; return fname, err
             percs = np.int16(percs / np.max(np.abs(percs)) * 32767)
             file = lyr // 3 + fin // 7 + percs // 4
             file = np.int16(file / np.max(np.abs(file)) * 32767)
             fname = f'{d.ROOT_DIR}/generated/gim_{round(time.time())}.wav'
             wavf.write(fname, 48000, file)
-        else: err = '타악기를 발견하는 것에 실패했어요.'
-    else: err = f"'{speech}' 타악기 파일이 없어요. 개발자를 호출해 주세요."
+        else: err = '타악기를 발견하는 것에 실패했어요.'; return fname, err
+    else: err = f"'{speech}' 타악기 파일이 없어요. 개발자를 호출해 주세요."; return fname, err
     return fname, err
