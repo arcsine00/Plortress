@@ -4,6 +4,8 @@ import numpy as np
 import random
 import os
 import time
+import sys
+from plortress import definitions as d
 
 def GIM(speech, bpm, beats):
     err = ''; fname = ''
@@ -17,7 +19,7 @@ def GIM(speech, bpm, beats):
 
     fslice = 100
     pitchshifter = StftPitchShift(1024, 256, 48000)
-    inst = np.array(wavf.read('D:/web/Plortress/plortress/generator_static/audio/insts/1.wav')[1]).T[0]
+    inst = np.array(wavf.read(f'{d.GEN_PATH}/audio/insts/1.wav')[1]).T[0]
 
     #초기멜로디 생성, 랜덤법
     b = random.randint(2,4) #반복 최소 단위
@@ -74,7 +76,7 @@ def GIM(speech, bpm, beats):
 
     lyr = np.array([])
     if speech in ['열병식']:
-        path = f'D:/web/Plortress/plortress/generator_static/audio/speech_div/{speech}'
+        path = f'{d.GEN_PATH}/audio/speech_div/{speech}'
         if os.path.exists(path):
             if len(os.listdir(path)) > 0:
                 ended = True; a = 0
@@ -94,7 +96,7 @@ def GIM(speech, bpm, beats):
     else: err = f"'{speech}'(이)라는 이름의 발언집은 아직 등록되지 않았거나 존재하지 않아요."
 
     percs = np.zeros((fpb//2)*len(melody))
-    path = 'D:/web/Plortress/plortress/generator_static/audio/percs'
+    path = f'{d.GEN_PATH}/audio/percs'
     if os.path.exists(path):
         if len(os.listdir(path)) > 0:
             for i in range(3):
@@ -116,7 +118,7 @@ def GIM(speech, bpm, beats):
             percs = np.int16(percs / np.max(np.abs(percs)) * 32767)
             file = lyr // 3 + fin // 7 + percs // 4
             file = np.int16(file / np.max(np.abs(file)) * 32767)
-            fname = f'D:/web/Plortress/plortress/generated/gim_{round(time.time())}.wav'
+            fname = f'{d.ROOT_DIR}/generated/gim_{round(time.time())}.wav'
             wavf.write(fname, 48000, file)
         else: err = '타악기를 발견하는 것에 실패했어요.'
     else: err = f"'{speech}' 타악기 파일이 없어요. 개발자를 호출해 주세요."
