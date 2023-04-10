@@ -15,7 +15,7 @@
         {% if req_list %}
         {% for req in req_list %}
         <tr>
-            <td>{{ forloop.counter }}</td>
+            <td>{{ forloop.recounter }}</td>
             <td>
                 <a href="{% url 'gim:detail' req.id %}">{{ req.speech }}</a>
             </td>
